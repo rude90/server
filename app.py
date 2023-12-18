@@ -7,8 +7,8 @@ UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
-    # Add any file format restrictions here if needed
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4'}
+    # Allow all file formats
+    return True
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -20,7 +20,7 @@ def upload_file():
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
 
-    if file and allowed_file(file.filename):
+    if file:
         file_size = int(request.headers['Content-Length'])
         file_format = file.filename.rsplit('.', 1)[1].lower()
         print(f"File Properties:\n  - Name: {file.filename}\n  - Size: {file_size} bytes\n  - Format: {file_format}")
@@ -45,4 +45,4 @@ def upload_file():
 if __name__ == '__main__':
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
